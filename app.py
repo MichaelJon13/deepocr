@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from pdf2image import convert_from_path
 
-def ocr_pdf(pdf_path, output_path="output.txt", dpi=300, delay=0):
+def ocr_pdf(pdf_path, output_path="output.txt", dpi=300, delay=0, max_pages=None):
     pdf_path = Path(pdf_path).resolve()
     output_path = Path(output_path).resolve()
 
@@ -27,6 +27,11 @@ def ocr_pdf(pdf_path, output_path="output.txt", dpi=300, delay=0):
         except Exception as e:
             print(f"Error converting PDF: {e}", file=sys.stderr)
             sys.exit(1)
+
+        # Limit pages if max_pages is specified
+        if max_pages and max_pages > 0:
+            images = images[:max_pages]
+            print(f"Processing only first {len(images)} page(s)")
 
         results = []
         for i, image in enumerate(images, 1):
@@ -61,7 +66,8 @@ def ocr_pdf(pdf_path, output_path="output.txt", dpi=300, delay=0):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python ocr_pdf.py <input.pdf> [output.txt] [dpi] [delay_seconds]")
+        print("Usage: python app.py <input.pdf> [output.txt] [dpi] [delay_seconds] [max_pages]")
+        print("Example: python app.py document.pdf output.txt 300 0 10  # Process first 10 pages")
         sys.exit(1)
 
     pdf = sys.argv[1]
@@ -79,4 +85,10 @@ if __name__ == "__main__":
         print(f"Error: Delay must be an integer, got '{sys.argv[4]}'", file=sys.stderr)
         sys.exit(1)
 
-    ocr_pdf(pdf, output, dpi, delay)
+    try:
+        max_pages = int(sys.argv[5]) if len(sys.argv) > 5 else None
+    except ValueError:
+        print(f"Error: Max pages must be an integer, got '{sys.argv[5]}'", file=sys.stderr)
+        sys.exit(1)
+
+    ocr_pdf(pdf, output, dpi, delay, max_pages)
