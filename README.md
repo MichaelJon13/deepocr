@@ -79,12 +79,12 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Windows:
 powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-# Create virtual environment and install dependencies
-uv venv
+# Install dependencies (creates venv automatically)
+uv sync
+
+# Activate virtual environment
 source .venv/bin/activate  # Linux/macOS
 # .venv\Scripts\activate   # Windows
-
-uv pip install -r requirements.txt
 
 # Install poppler (required by pdf2image)
 # Ubuntu/Debian:

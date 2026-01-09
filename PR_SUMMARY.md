@@ -132,9 +132,8 @@ git clone <repo-url>
 cd deepocr
 
 # Install Python dependencies with uv
-uv venv
+uv sync
 source .venv/bin/activate
-uv pip install -r requirements.txt
 
 # Install Ollama and pull model
 ollama pull deepseek-ocr
