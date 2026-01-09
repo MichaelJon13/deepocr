@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# OCR outputs
+output.txt
+output.md
+*.checkpoint.json
+ocr.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Temp files
+*.tmp
+temp/
+tmp/
+
+# Large test files (keep 179pageExample.pdf, ignore others)
+*.pdf
+!179pageExample.pdf

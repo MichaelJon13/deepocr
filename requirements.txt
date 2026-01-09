@@ -1,0 +1,13 @@
+# DeepOCR Python Dependencies
+# PDF to image conversion
+pdf2image>=1.16.0
+
+# Image processing
+Pillow>=10.0.0
+
+# Note: This project also requires:
+# - Ollama (https://ollama.com) installed and running
+# - poppler-utils for pdf2image backend:
+#   Ubuntu/Debian: sudo apt install poppler-utils
+#   macOS: brew install poppler
+#   Windows: https://github.com/oschwartz10612/poppler-windows/releases
