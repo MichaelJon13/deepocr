@@ -4,7 +4,9 @@
 
 ## Table of Contents
 
+- [Installation & Setup](#installation--setup)
 - [Quick Start](#quick-start)
+- [app.py - Python CLI Tool](#apppy---python-cli-tool)
 - [Model Info](#model-info)
 - [Important Notes](#%EF%B8%8F-important-notes)
 - [20 Example CLI Prompts](#20-example-cli-prompts)
@@ -16,6 +18,74 @@
 - [Resolution Modes](#resolution-modes-from-github)
 - [Troubleshooting](#troubleshooting)
 - [Resources](#resources)
+
+---
+
+## Installation & Setup
+
+### 1. Install Ollama
+
+**Linux:**
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**macOS:**
+```bash
+# Download and install from ollama.com
+# Or use Homebrew
+brew install ollama
+
+# Start Ollama service
+ollama serve
+```
+
+**Windows:**
+```bash
+# Download installer from https://ollama.com/download/windows
+# Run the installer and follow the prompts
+```
+
+### 2. Verify Installation
+
+```bash
+# Check Ollama version (requires v0.13.0+)
+ollama --version
+
+# Start Ollama service (if not already running)
+ollama serve
+```
+
+### 3. Pull the DeepSeek-OCR Model
+
+```bash
+# Download the model (6.7GB download)
+ollama pull deepseek-ocr
+
+# Verify the model is installed
+ollama list
+
+# Check model details
+ollama show deepseek-ocr
+```
+
+### 4. Install Python Dependencies (for app.py)
+
+```bash
+# Install required packages
+pip install pdf2image Pillow
+
+# Install poppler (required by pdf2image)
+# Ubuntu/Debian:
+sudo apt install poppler-utils
+
+# macOS:
+brew install poppler
+
+# Windows:
+# Download from https://github.com/oschwartz10612/poppler-windows/releases
+# Add bin folder to PATH
+```
 
 ---
 
@@ -41,6 +111,120 @@ ollama run deepseek-ocr "./test.png\nFree OCR."
 # With layout preservation
 ollama run deepseek-ocr "./document.png\n<|grounding|>Convert the document to markdown."
 ```
+
+---
+
+## app.py - Python CLI Tool
+
+This repository includes `app.py`, a powerful command-line tool for OCR processing of multi-page PDFs using DeepSeek-OCR.
+
+### Features
+
+- **Multiple OCR prompt types** - Choose from `free`, `layout`, `markdown`, `extract`, or `figure`
+- **Page range selection** - Process specific page ranges (e.g., pages 5-15)
+- **Flexible output** - Control DPI, delay between pages, and output format
+- **Progress tracking** - Real-time progress with timing statistics
+- **Verbose mode** - Detailed output for debugging
+
+### Quick Usage
+
+```bash
+# View help and all options
+python app.py --help
+
+# Basic usage - process entire PDF
+python app.py document.pdf
+
+# Process first 10 pages only
+python app.py 179pageExample.pdf --end-page 10
+
+# Process pages 5-15 with layout preservation
+python app.py document.pdf --start-page 5 --end-page 15 --prompt layout
+
+# High quality markdown output with verbose mode
+python app.py document.pdf -o output.md --dpi 400 --prompt markdown -v
+
+# Process with delay to avoid overloading (5 sec between pages)
+python app.py large.pdf --delay 5 --end-page 20 -v
+```
+
+### Command-Line Options
+
+```
+usage: app.py [-h] [-o OUTPUT] [--dpi DPI] [--delay DELAY]
+              [--start-page START_PAGE] [--end-page END_PAGE]
+              [--prompt {free,layout,markdown,extract,figure}]
+              [--model MODEL] [-v]
+              pdf
+
+positional arguments:
+  pdf                   Input PDF file to process
+
+optional arguments:
+  -h, --help            Show help message and exit
+  -o, --output OUTPUT   Output text file (default: output.txt)
+  --dpi DPI             Resolution for PDF to image conversion (default: 300)
+  --delay DELAY         Delay in seconds between processing pages (default: 0)
+  --start-page START    First page to process, 1-indexed (default: 1)
+  --end-page END        Last page to process, inclusive (default: all pages)
+  --prompt TYPE         OCR prompt type (default: free)
+  --model MODEL         Ollama model name (default: deepseek-ocr)
+  -v, --verbose         Enable verbose output
+```
+
+### OCR Prompt Types
+
+| Prompt Type | Description | Use Case |
+|-------------|-------------|----------|
+| `free` | Simple text extraction | Basic OCR, plain text |
+| `layout` | Layout-aware parsing | Multi-column documents, complex layouts |
+| `markdown` | Convert to Markdown | Structured documents, reports |
+| `extract` | Extract text | General text extraction |
+| `figure` | Parse figures/charts | Diagrams, charts, scientific figures |
+
+### Examples
+
+**1. Test with included PDF (first 10 pages)**
+```bash
+python app.py 179pageExample.pdf --end-page 10 -o test_output.txt
+```
+
+**2. High-quality document conversion to Markdown**
+```bash
+python app.py report.pdf --dpi 400 --prompt markdown -o report.md
+```
+
+**3. Process specific page range with layout preservation**
+```bash
+python app.py book.pdf --start-page 20 --end-page 50 --prompt layout -v
+```
+
+**4. Large PDF with delay to prevent overload**
+```bash
+python app.py large_scan.pdf --delay 10 --end-page 100 -v
+```
+
+**5. Scientific paper with figure parsing**
+```bash
+python app.py paper.pdf --prompt figure --dpi 400 -o paper_ocr.txt
+```
+
+### Sample Output
+
+```
+Converting 179pageExample.pdf to images (DPI=300)...
+Total pages in PDF: 179
+Processing pages 1 to 10 (10 page(s))
+Processing page 1/10... ✓ (12.3s)
+Processing page 2/10... ✓ (11.8s)
+Processing page 3/10... ✓ (12.1s)
+...
+Done! Processed 10 page(s) in 121.5s
+Average: 12.2s per page
+Output saved to: output.txt
+```
+
+---
 
 ## Model Info
 
