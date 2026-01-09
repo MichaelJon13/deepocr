@@ -72,8 +72,19 @@ ollama show deepseek-ocr
 ### 4. Install Python Dependencies (for app.py)
 
 ```bash
-# Install required packages
-pip install pdf2image Pillow
+# Install uv (fast Python package manager)
+# Linux/macOS:
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows:
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Create virtual environment and install dependencies
+uv venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scripts\activate   # Windows
+
+uv pip install -r requirements.txt
 
 # Install poppler (required by pdf2image)
 # Ubuntu/Debian:
@@ -562,8 +573,8 @@ brew install poppler
 #### Python Alternative (pdf2image)
 
 ```bash
-# Install the Python package
-pip install pdf2image
+# Install the Python package with uv
+uv pip install pdf2image
 
 # Still requires poppler backend:
 # Ubuntu/Debian: sudo apt install poppler-utils
@@ -660,7 +671,7 @@ if __name__ == "__main__":
 
 **Usage:**
 ```bash
-pip install pdf2image Pillow
+uv pip install pdf2image Pillow
 python ocr_pdf.py document.pdf output.txt 300      # No delay
 python ocr_pdf.py document.pdf output.txt 300 10   # 10 sec delay between pages
 ```
